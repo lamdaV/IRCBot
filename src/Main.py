@@ -12,6 +12,7 @@ def main():
     """ 
         The main function of the IRCbot.
     """
+    # Constants.
     global IRC_SOCKET
     global SERVER
     global PORT
@@ -19,19 +20,32 @@ def main():
     global NICKNAME
     global RESPONSES
 
+    # DataList location constants.
+    SERVER_DATA = 0
+    PORT_DATA = 1
+    CHANNEL_DATA = 2
+    NICKNAME_DATA = 3
+    HINT_DATA = 4
+
+    # Logging.
     verbose = True
+
+    # Obtain data.
+    file = open("data.txt")
+    dataList = file.read().split("\n")
+    file.close()
 
     # Update on use.
     IRC_SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    SERVER = "weber.freenode.net"
-    PORT = 6667
-    CHANNEL = "#testbot333"
-    NICKNAME = "testbot1133"
+    SERVER = dataList[SERVER_DATA]
+    PORT = int(dataList[PORT_DATA])
+    CHANNEL = dataList[CHANNEL_DATA]
+    NICKNAME = dataList[NICKNAME_DATA]
 
     # Add commands here.
     RESPONSES = {'!help' : 'The available commands are "!help", "!assignments", and "!hint"',
                  '!assignments' : 'Assignments can be found here: https://www.rose-hulman.edu/class/csse/csse120/201540/',
-                 '!hint' : 'There is no hint for the current assignment.'};
+                 '!hint' : dataList[HINT_DATA]};
 
     connect()
 
@@ -39,6 +53,12 @@ def main():
     while True:
         ircMessage = IRC_SOCKET.recv(2048).decode()
         ircMessage = ircMessage.strip("\n\r")
+
+        file = open("data.txt")
+        dataList = file.read().split("\n")
+        file.close()
+        updateHint = {'!hint' : dataList[HINT_DATA]}
+        RESPONSES.update(updateHint)
 
         if (verbose):
             print(ircMessage)
