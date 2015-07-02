@@ -4,7 +4,6 @@ A conceptual bot that is to be implented in a desired IRC server and channel.
 Created on Jun 27, 2015.
 Written by: lamd.
 """
-
 import socket
 import datetime as dt  # Could be used to determine which assignment to display.
 
